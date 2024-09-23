@@ -1,43 +1,15 @@
-import { useState } from "react"
-import reactLogo from "./assets/react.svg"
-import viteLogo from "/vite.svg"
-import { useQuery } from "@apollo/client"
-import { graphql } from "./gql"
-
-const testQuery = graphql(`
-  query Test {
-    items {
-      id
-    }
-  }
-`)
+import { BrowserRouter, RouterProvider } from "react-router-dom"
+import { routes } from "./router"
+import NavBar from "./components/NavBar"
 
 function App() {
-  const [count, setCount] = useState(0)
-  const { data } = useQuery(testQuery)
-
   return (
-    <>
-      {data?.items?.map((item) => (
-        <div key={item.id}>{item.id}</div>
-      ))
-      }
-      <div className='flex px-2'>
-        <a href='https://vitejs.dev' target='_blank'>
-          <img src={viteLogo} className='logo' alt='Vite logo' />
-        </a>
-        <a href='https://react.dev' target='_blank'>
-          <img src={reactLogo} className='logo react' alt='React logo' />
-        </a>
+    <div className='bg-stone-900'>
+      <NavBar />
+      <div className='mx-6 flex min-h-screen flex-col gap-3 bg-junkshop'>
+        <RouterProvider router={routes} />
       </div>
-      <h1>Vite + React</h1>
-      <div className='card'>
-        <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-    </>
+    </div>
   )
 }
 

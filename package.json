@@ -7,25 +7,37 @@
     "node": ">=18"
   },
   "scripts": {
-    "dev": "vite & yarn codegen:watch",
+    "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "format:check": "prettier --check \"**/*.{ts,tsx}\" --config .prettierrc.mjs",
     "format:fix": "prettier --write \"**/*.{ts,tsx}\" --config .prettierrc.mjs",
     "preview": "vite preview",
     "codegen": "graphql-codegen --require dotenv/config --config codegen.ts",
-    "codegen:watch": "yarn codegen -w"
+    "codegen:watch": "graphql-codegen --require dotenv/config --config codegen.ts --watch"
   },
   "dependencies": {
     "@apollo/client": "^3.11.8",
     "@graphql-codegen/cli": "^5.0.2",
     "@graphql-codegen/client-preset": "^4.3.3",
+    "@hookform/resolvers": "^3.9.0",
+    "@radix-ui/react-label": "^2.1.0",
+    "@radix-ui/react-menubar": "^1.1.1",
+    "@radix-ui/react-slot": "^1.1.0",
+    "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "dotenv": "^16.4.5",
     "graphql": "^16.9.0",
     "graphql-config": "^5.1.2",
+    "lucide-react": "^0.441.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-bootstrap": "^2.10.4",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.53.0",
+    "react-router-dom": "^6.26.2",
+    "tailwind-merge": "^2.5.2",
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@parcel/watcher": "^2.4.1",
