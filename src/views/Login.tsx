@@ -33,7 +33,8 @@ export const LoginView = () => {
         }
         localStorage.setItem("userData", JSON.stringify(userData))
         userVar(userData)
-        navigate("/home")
+
+        navigate("/myItems")
       }
     })
   }

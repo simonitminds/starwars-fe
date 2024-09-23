@@ -12,6 +12,7 @@ const createItem = graphql(`
     $price: Float!
     $description: String!
     $userId: Int!
+    $forSale: Boolean!
   ) {
     createItem(
       name: $name
@@ -19,12 +20,14 @@ const createItem = graphql(`
       price: $price
       description: $description
       userId: $userId
+      forSale: $forSale
     ) {
       id
       name
       type
       price
       description
+      forSale
       user {
         id
         name

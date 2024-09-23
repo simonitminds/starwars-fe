@@ -12,6 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { Button } from "./ui/button"
+import { useNavigate } from "react-router-dom"
 
 const formSchema = z.object({
   name: z.string(),
@@ -33,9 +34,12 @@ export const AddItemForm = () => {
       userId: 0,
     },
   })
+  const navigate = useNavigate()
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values)
+
+    navigate("/myItems")
   }
 
   return (

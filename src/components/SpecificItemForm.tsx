@@ -13,6 +13,7 @@ const formSchema = z.object({
   type: z.string(),
   price: z.coerce.number(),
   description: z.string(),
+  forSale: z.boolean(),
 })
 
 export type FormType = z.infer<typeof formSchema>
@@ -30,6 +31,7 @@ export function SpecificItemForm(props: {
       type: "Type",
       price: 100,
       description: "Description",
+      forSale: true,
     },
   })
   const navigate = useNavigate()
@@ -37,7 +39,7 @@ export function SpecificItemForm(props: {
   function onSubmit(values: z.infer<typeof formSchema>) {
     props.updateFunc(values)
     console.log(values)
-    navigate("/home")
+    navigate("/myItems")
   }
 
   return (
@@ -94,6 +96,23 @@ export function SpecificItemForm(props: {
                 <Textarea {...field} />
               </FormControl>
 
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name='forSale'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>For Sale</FormLabel>
+              <FormControl>
+                <Input
+                  type='checkbox'
+                  checked={field.value}
+                  onChange={(e) => field.onChange(e.target.checked)}
+                />
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}

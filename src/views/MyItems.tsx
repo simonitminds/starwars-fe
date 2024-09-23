@@ -1,4 +1,3 @@
-import { graphql } from "@/gql"
 import {
   Table,
   TableBody,
@@ -13,22 +12,25 @@ import { useNavigate } from "react-router-dom"
 import { useEffect } from "react"
 import { userVar } from "@/state/userState"
 
-const testQuery = graphql(`
-  query items {
-    items {
+import { gql } from "@apollo/client"
+
+const testQuery = gql(`
+  query itemsByUser($userId: Int!) {
+    itemsByUser(userId: $userId) {
       id
       name
       type
       price
       description
+      forSale
     }
   }
 `)
-
-export const HomeView = () => {
-  const { loading, error, data } = useQuery(testQuery)
+export const MyItemsView = () => {
   const navigate = useNavigate()
   const user = useReactiveVar(userVar)
+
+  const { data } = useQuery(testQuery, { variables: { userId: user?.id } })
 
   useEffect(() => {
     const storedUserData = localStorage.getItem("userData")
@@ -40,10 +42,7 @@ export const HomeView = () => {
     }
   }, [navigate])
 
-  if (loading) return <p>Loading...</p>
-  if (error) return <p>Error: {error.message}</p>
-
-  const items = data?.items || []
+  const items = data?.itemsByUser || []
 
   const handleButtonClick = (id: number) => {
     navigate(`/item/${id}`)
@@ -52,7 +51,7 @@ export const HomeView = () => {
   return (
     <div className=''>
       <Label className='mx-4 text-center font-mono text-5xl font-bold text-stone-950'>
-        Junk for sale
+        My junk
       </Label>
       <div className='/80 m-3 grid place-items-center bg-stone-600/80 p-3'>
         <Table>
@@ -61,6 +60,7 @@ export const HomeView = () => {
               <TableHead>Item</TableHead>
               <TableHead>Type</TableHead>
               <TableHead>Description</TableHead>
+              <TableHead>Currently for sale?</TableHead>
               <TableHead className='text-right'>Price</TableHead>
             </TableRow>
           </TableHeader>
@@ -71,6 +71,7 @@ export const HomeView = () => {
                   <TableCell>{item.name}</TableCell>
                   <TableCell>{item.type}</TableCell>
                   <TableCell>{item.description}</TableCell>
+                  <TableCell>{item.forSale ? "Yes" : "No"}</TableCell>
                   <TableCell className='text-right'>ᖬ{item.price}</TableCell>
                   <TableCell colSpan={5}>
                     <button

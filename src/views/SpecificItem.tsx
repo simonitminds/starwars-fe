@@ -3,6 +3,7 @@ import { FormType, SpecificItemForm } from "@/components/SpecificItemForm"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 
 import { graphql } from "@/gql"
+import { ItemsByUserDocument, UpdateItemMutation, UpdateItemMutationVariables } from "@/gql/graphql"
 import { userVar } from "@/state/userState"
 import { useMutation, useQuery, useReactiveVar } from "@apollo/client"
 import { useEffect } from "react"
@@ -34,7 +35,12 @@ const updateItemQuery = graphql(`
 
 export const SpecificItemView = () => {
   const user = useReactiveVar(userVar)
-  const [update, { data: smaata }] = useMutation(updateItemQuery)
+  const [update, { data: smaata }] = useMutation<UpdateItemMutation, UpdateItemMutationVariables>(
+    updateItemQuery,
+    {
+      refetchQueries: [{ query: ItemsByUserDocument, variables: { userId: user.id } }],
+    },
+  )
   const { id } = useParams<{ id: string }>()
   const itemId = parseInt(id ?? "0")
   const { data } = useQuery(itemQuery, { variables: { id: itemId } })
