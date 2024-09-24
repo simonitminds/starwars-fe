@@ -6,7 +6,7 @@ function App() {
   return (
     <div className='bg-stone-900'>
       <NavBar />
-      <div className='mx-6 flex min-h-screen flex-col gap-3 bg-junkshop'>
+      <div className='mx-6 flex max-h-screen flex-grow flex-col gap-3 bg-junkshop'>
         <RouterProvider router={routes} />
       </div>
     </div>

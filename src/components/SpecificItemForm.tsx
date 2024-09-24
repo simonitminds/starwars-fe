@@ -34,12 +34,9 @@ export function SpecificItemForm(props: {
       forSale: true,
     },
   })
-  const navigate = useNavigate()
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     props.updateFunc(values)
-    console.log(values)
-    navigate("/myItems")
   }
 
   return (

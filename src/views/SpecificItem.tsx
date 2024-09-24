@@ -56,9 +56,10 @@ export const SpecificItemView = () => {
     }
   }, [navigate])
 
-  const do_the_thing = (vars: FormType) => {
+  const updateFunc = (vars: FormType) => {
     if (!data?.item?.id) return
     update({ variables: { item: { ...vars, id: Number(data.item.id), userId: Number(user.id) } } })
+    navigate("/myItems")
   }
 
   return (
@@ -68,7 +69,7 @@ export const SpecificItemView = () => {
           <CardTitle className='text-center'>Update item details</CardTitle>
         </CardHeader>
         <CardContent className='flex flex-col gap-3'>
-          <SpecificItemForm updateFunc={do_the_thing} item={data?.item}></SpecificItemForm>
+          <SpecificItemForm updateFunc={updateFunc} item={data?.item}></SpecificItemForm>
         </CardContent>
       </Card>
     </div>

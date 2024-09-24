@@ -13,6 +13,9 @@ function NavBar() {
           <Nav.Link className='px-3 hover:text-stone-400' href='/addItem'>
             Add new item
           </Nav.Link>
+          <Nav.Link className='px-4 hover:text-stone-400' href='/saleItems'>
+            Items for sale
+          </Nav.Link>
         </Navbar.Collapse>
       </Container>
     </Navbar>

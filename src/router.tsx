@@ -3,6 +3,7 @@ import { LoginView } from "./views/Login"
 import { SpecificItemView } from "./views/SpecificItem"
 import { AddItemView } from "./views/AddItem"
 import { MyItemsView } from "./views/MyItems"
+import { ItemsForSaleView } from "./views/ItemsForSale"
 
 export const routes = createBrowserRouter([
   {
@@ -21,4 +22,5 @@ export const routes = createBrowserRouter([
     path: "/addItem",
     element: <AddItemView />,
   },
+  { path: "/saleItems", element: <ItemsForSaleView /> },
 ])
