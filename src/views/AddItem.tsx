@@ -1,43 +1,30 @@
 import { AddItemForm } from "@/components/AddItemForm"
-import { useEffect } from "react"
-import { useNavigate } from "react-router-dom"
 import { userVar } from "@/state/userState"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { graphql } from "@/gql"
+import { useMutation, useReactiveVar } from "@apollo/client"
+import { FormType } from "@/components/SpecificItemForm"
+import { useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 
-const createItem = graphql(`
-  mutation createItem(
-    $name: String!
-    $type: String!
-    $price: Float!
-    $description: String!
-    $userId: Int!
-    $forSale: Boolean!
-  ) {
-    createItem(
-      name: $name
-      type: $type
-      price: $price
-      description: $description
-      userId: $userId
-      forSale: $forSale
-    ) {
+const addItemQuery = graphql(`
+  mutation createItem($item: ItemInput!) {
+    createItem(item: $item) {
       id
       name
       type
       price
       description
       forSale
-      user {
-        id
-        name
-      }
     }
   }
 `)
 
 export const AddItemView = () => {
+  const user = useReactiveVar(userVar)
+  const [create] = useMutation(addItemQuery)
   const navigate = useNavigate()
+
   useEffect(() => {
     const storedUserData = localStorage.getItem("userData")
     if (storedUserData) {
@@ -48,6 +35,19 @@ export const AddItemView = () => {
     }
   }, [navigate])
 
+  const createItem = (data: FormType) => {
+    console.log(data)
+    console.log(user.id)
+    create({
+      variables: {
+        item: {
+          ...data,
+          userId: user.id,
+        },
+      },
+    })
+  }
+
   return (
     <div className='min-w-screen grid min-h-screen place-items-center'>
       <Card>
@@ -55,7 +55,7 @@ export const AddItemView = () => {
           <CardTitle className='text-center'>Add a new item</CardTitle>
         </CardHeader>
         <CardContent className='flex flex-col gap-3'>
-          <AddItemForm></AddItemForm>
+          <AddItemForm addFunc={createItem}></AddItemForm>
         </CardContent>
       </Card>
     </div>
