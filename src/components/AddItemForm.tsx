@@ -13,17 +13,19 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { Button } from "./ui/button"
 import { useNavigate } from "react-router-dom"
+import { Item } from "@/gql/graphql"
 
 const formSchema = z.object({
   name: z.string(),
   type: z.string(),
   price: z.coerce.number(),
   description: z.string(),
-  userId: z.coerce.number(),
+  forSale: z.boolean(),
 })
+
 export type FormType = z.infer<typeof formSchema>
 
-export const AddItemForm = () => {
+export function AddItemForm(props: { item?: Item | null; addFunc: (vars: FormType) => void }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -31,14 +33,14 @@ export const AddItemForm = () => {
       type: "",
       price: 0,
       description: "",
-      userId: 0,
+      forSale: false,
     },
   })
   const navigate = useNavigate()
 
   function onSubmit(values: z.infer<typeof formSchema>) {
+    props.addFunc(values)
     console.log(values)
-
     navigate("/myItems")
   }
 
@@ -103,14 +105,17 @@ export const AddItemForm = () => {
         />
         <FormField
           control={form.control}
-          name='userId'
+          name='forSale'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>User</FormLabel>
+              <FormLabel>For Sale</FormLabel>
               <FormControl>
-                <Input placeholder='Name' {...field} />
+                <Input
+                  type='checkbox'
+                  checked={field.value}
+                  onChange={(e) => field.onChange(e.target.checked)}
+                />
               </FormControl>
-              <FormDescription />
               <FormMessage />
             </FormItem>
           )}
