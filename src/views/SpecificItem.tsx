@@ -1,13 +1,9 @@
 import { FormType, SpecificItemForm } from "@/components/SpecificItemForm"
-
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
-
 import { graphql } from "@/gql"
-import { ItemsByUserDocument, UpdateItemMutation, UpdateItemMutationVariables } from "@/gql/graphql"
 import { userVar } from "@/state/userState"
 import { useMutation, useQuery, useReactiveVar } from "@apollo/client"
-import { useEffect } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
 
 const itemQuery = graphql(`
   query item($id: Int!) {
@@ -22,8 +18,8 @@ const itemQuery = graphql(`
 `)
 
 const updateItemQuery = graphql(`
-  mutation updateItem($item: ItemInput!) {
-    updateItem(item: $item) {
+  mutation updateItem($item: ItemInput!, $itemId: Int!) {
+    updateItem(item: $item, itemId: $itemId) {
       id
       name
       type
@@ -35,30 +31,16 @@ const updateItemQuery = graphql(`
 
 export const SpecificItemView = () => {
   const user = useReactiveVar(userVar)
-  const [update, { data: smaata }] = useMutation<UpdateItemMutation, UpdateItemMutationVariables>(
-    updateItemQuery,
-    {
-      refetchQueries: [{ query: ItemsByUserDocument, variables: { userId: user.id } }],
-    },
-  )
+  const [update] = useMutation(updateItemQuery, {})
   const { id } = useParams<{ id: string }>()
   const itemId = parseInt(id ?? "0")
   const { data } = useQuery(itemQuery, { variables: { id: itemId } })
-  const navigate = useNavigate()
-
-  useEffect(() => {
-    const storedUserData = localStorage.getItem("userData")
-    if (storedUserData) {
-      const userData = JSON.parse(storedUserData)
-      userVar(userData)
-    } else {
-      navigate("/login")
-    }
-  }, [navigate])
 
   const do_the_thing = (vars: FormType) => {
     if (!data?.item?.id) return
-    update({ variables: { item: { ...vars, id: Number(data.item.id), userId: Number(user.id) } } })
+    update({
+      variables: { item: { ...vars, userId: Number(user.id) }, itemId: Number(data.item.id) },
+    })
   }
 
   return (

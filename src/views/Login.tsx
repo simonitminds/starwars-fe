@@ -5,7 +5,6 @@ import { graphql } from "@/gql"
 import { userVar } from "@/state/userState"
 import { useMutation } from "@apollo/client"
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
 
 const testQuery = graphql(`
   mutation Login($username: String!) {
@@ -20,21 +19,22 @@ const testQuery = graphql(`
 `)
 export const LoginView = () => {
   const [username, setUsername] = useState("")
-  const [login, { data }] = useMutation(testQuery)
-  const navigate = useNavigate()
+  const [login] = useMutation(testQuery)
 
   const submitClick = () => {
     login({ onCompleted: console.log, variables: { username } }).then((x) => {
       if (x.data?.login) {
         const userData = {
-          id: x.data.login?.user?.id || "",
+          id: x.data.login?.user?.id || -1,
           token: x.data.login.token || "",
           username: x.data?.login?.user?.name || "",
         }
         localStorage.setItem("userData", JSON.stringify(userData))
+        if (x.data.login?.token) {
+          localStorage.setItem("token", x.data.login.token)
+        }
+        console.log(userData)
         userVar(userData)
-
-        navigate("/myItems")
       }
     })
   }
