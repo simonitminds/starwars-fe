@@ -1,4 +1,4 @@
-import { BrowserRouter, RouterProvider } from "react-router-dom"
+import { RouterProvider } from "react-router-dom"
 import { routes } from "./router"
 import NavBar from "./components/NavBar"
 

@@ -13,8 +13,8 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    "\n  mutation createItem(\n    $name: String!\n    $type: String!\n    $price: Float!\n    $description: String!\n    $userId: Int!\n    $forSale: Boolean!\n  ) {\n    createItem(\n      name: $name\n      type: $type\n      price: $price\n      description: $description\n      userId: $userId\n      forSale: $forSale\n    ) {\n      id\n      name\n      type\n      price\n      description\n      forSale\n      user {\n        id\n        name\n      }\n    }\n  }\n": types.CreateItemDocument,
-    "\n  mutation Login($username: String!) {\n    login(username: $username) {\n      token\n      user {\n        id\n        name\n      }\n    }\n  }\n": types.LoginDocument,
+    "\n    query itemsForSale {\n        itemsForSale {\n        id\n        name\n        type\n        price\n        description\n        }\n    }\n    ": types.ItemsForSaleDocument,
+    "\n  mutation Login($username: String!) {\n    login(username: $username) {\n      token\n      user {\n        id\n        name\n        role\n      }\n    }\n  }\n": types.LoginDocument,
     "\n  query itemsByUser($userId: Int!) {\n    itemsByUser(userId: $userId) {\n      id\n      name\n      type\n      price\n      description\n      forSale\n    }\n  }\n": types.ItemsByUserDocument,
     "\n  query item($id: Int!) {\n    item(id: $id) {\n      id\n      name\n      type\n      price\n      description\n    }\n  }\n": types.ItemDocument,
     "\n  mutation updateItem($item: ItemInput!) {\n    updateItem(item: $item) {\n      id\n      name\n      type\n      price\n      description\n    }\n  }\n": types.UpdateItemDocument,
@@ -37,11 +37,11 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation createItem(\n    $name: String!\n    $type: String!\n    $price: Float!\n    $description: String!\n    $userId: Int!\n    $forSale: Boolean!\n  ) {\n    createItem(\n      name: $name\n      type: $type\n      price: $price\n      description: $description\n      userId: $userId\n      forSale: $forSale\n    ) {\n      id\n      name\n      type\n      price\n      description\n      forSale\n      user {\n        id\n        name\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation createItem(\n    $name: String!\n    $type: String!\n    $price: Float!\n    $description: String!\n    $userId: Int!\n    $forSale: Boolean!\n  ) {\n    createItem(\n      name: $name\n      type: $type\n      price: $price\n      description: $description\n      userId: $userId\n      forSale: $forSale\n    ) {\n      id\n      name\n      type\n      price\n      description\n      forSale\n      user {\n        id\n        name\n      }\n    }\n  }\n"];
+export function graphql(source: "\n    query itemsForSale {\n        itemsForSale {\n        id\n        name\n        type\n        price\n        description\n        }\n    }\n    "): (typeof documents)["\n    query itemsForSale {\n        itemsForSale {\n        id\n        name\n        type\n        price\n        description\n        }\n    }\n    "];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation Login($username: String!) {\n    login(username: $username) {\n      token\n      user {\n        id\n        name\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation Login($username: String!) {\n    login(username: $username) {\n      token\n      user {\n        id\n        name\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  mutation Login($username: String!) {\n    login(username: $username) {\n      token\n      user {\n        id\n        name\n        role\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation Login($username: String!) {\n    login(username: $username) {\n      token\n      user {\n        id\n        name\n        role\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

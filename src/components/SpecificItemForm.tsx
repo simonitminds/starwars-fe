@@ -6,7 +6,6 @@ import { Input } from "./ui/input"
 import { Item } from "@/gql/graphql"
 import { Textarea } from "./ui/textarea"
 import { Button } from "./ui/button"
-import { useNavigate } from "react-router-dom"
 
 const formSchema = z.object({
   name: z.string({ required_error: "ID is required" }),

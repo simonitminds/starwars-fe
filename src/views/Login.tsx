@@ -14,6 +14,7 @@ const testQuery = graphql(`
       user {
         id
         name
+        role
       }
     }
   }
@@ -27,9 +28,10 @@ export const LoginView = () => {
     login({ onCompleted: console.log, variables: { username } }).then((x) => {
       if (x.data?.login) {
         const userData = {
-          id: x.data.login?.user?.id || "",
+          id: x.data.login?.user?.id || 0,
           token: x.data.login.token || "",
           username: x.data?.login?.user?.name || "",
+          role: x.data?.login?.user?.role || "",
         }
         localStorage.setItem("userData", JSON.stringify(userData))
         userVar(userData)

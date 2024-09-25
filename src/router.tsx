@@ -4,6 +4,7 @@ import { SpecificItemView } from "./views/SpecificItem"
 import { AddItemView } from "./views/AddItem"
 import { MyItemsView } from "./views/MyItems"
 import { ItemsForSaleView } from "./views/ItemsForSale"
+import ProtectedRoute from "./components/protectedRoute"
 
 export const routes = createBrowserRouter([
   {
@@ -12,15 +13,30 @@ export const routes = createBrowserRouter([
   },
   {
     path: "/myItems",
-    element: <MyItemsView />,
+    element: (
+      <ProtectedRoute allowedRoles={"ADMIN"}>
+        <MyItemsView />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/item/:id",
-    element: <SpecificItemView />,
+    element: (
+      <ProtectedRoute allowedRoles={"ADMIN"}>
+        <SpecificItemView />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/addItem",
-    element: <AddItemView />,
+    element: (
+      <ProtectedRoute allowedRoles={"ADMIN"}>
+        <AddItemView />
+      </ProtectedRoute>
+    ),
   },
-  { path: "/saleItems", element: <ItemsForSaleView /> },
+  {
+    path: "/saleItems",
+    element: <ItemsForSaleView />,
+  },
 ])
