@@ -9,9 +9,12 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { gql, useQuery, useReactiveVar } from "@apollo/client"
 import { userVar } from "@/state/userState"
-import { useEffect } from "react"
+import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { Item } from "@/gql/graphql"
+import { Button } from "@/components/ui/button"
+import { useToast } from "@/hooks/use-toast"
+import { ToastAction } from "@radix-ui/react-toast"
 
 const itemsForSaleQuery = gql(`
     query itemsForSale {
@@ -29,18 +32,39 @@ export const ItemsForSaleView = () => {
   const navigate = useNavigate()
   const user = useReactiveVar(userVar)
   const { data } = useQuery(itemsForSaleQuery)
+  const initialCart = localStorage.getItem("cart")
+  const [cart, setCart] = useState(initialCart ? (JSON.parse(initialCart) ?? []) : [])
+  const { toast } = useToast()
+  console.log("Initial:", cart)
 
-  useEffect(() => {
-    const storedUserData = localStorage.getItem("userData")
-    if (storedUserData) {
-      const userData = JSON.parse(storedUserData)
-      userVar(userData)
+  const addToCart = (product: Item) => {
+    console.log("Adding product:", product)
+    console.log("Current cart:", cart)
+    const currentCart = [...cart]
+    const isAlreadyInCart = currentCart.some((item) => item.id === product.id)
+    if (!isAlreadyInCart) {
+      const updatedCart = [...currentCart, product]
+      localStorage.setItem("cart", JSON.stringify(updatedCart))
+      setCart(updatedCart)
+      console.log("updated", updatedCart)
     } else {
-      navigate("/login")
+      console.log("Item already in cart")
     }
-  }, [navigate])
+
+    toast({
+      title: "Item added",
+      description: `${product.name} has been added to your cart`,
+      action: (
+        <ToastAction altText='View Cart' onClick={() => navigate("/cart")}>
+          {" "}
+          See cart{" "}
+        </ToastAction>
+      ),
+    })
+  }
 
   const products = data?.itemsForSale || []
+
   return (
     <div className='min-h-screen p-8 text-[#8B4513]'>
       <div className='flex justify-center'>
@@ -57,7 +81,8 @@ export const ItemsForSaleView = () => {
           >
             <CardHeader>
               <img
-                alt={product.name}
+                src='src/assets/Watto.png'
+                alt='item'
                 width={200}
                 height={200}
                 className='h-48 w-full rounded-md object-cover'
@@ -74,12 +99,13 @@ export const ItemsForSaleView = () => {
             </CardContent>
             <CardFooter className='flex items-center justify-between'>
               <span className='text-2xl font-bold text-[#8B4513]'>{product.price} credits</span>
-              <Badge
+              <Button
                 variant='outline'
                 className='cursor-pointer border-[#8B4513] text-[#8B4513] transition-colors hover:bg-[#8B4513] hover:text-[#E6D2B5]'
+                onClick={() => addToCart(product)}
               >
                 Add to cart
-              </Badge>
+              </Button>
             </CardFooter>
           </Card>
         ))}

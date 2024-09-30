@@ -43,7 +43,7 @@ export const SpecificItemView = () => {
     update({
       variables: { item: { ...vars, userId: Number(user.id) }, itemId: Number(data.item.id) },
     })
-    navigate("/myItems")
+    navigate("/")
   }
 
   return (

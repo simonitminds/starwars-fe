@@ -1,27 +1,34 @@
-import { RouterProvider } from "react-router-dom"
-import { routes } from "./router"
+import { Outlet, useNavigate } from "react-router-dom"
 import NavBar from "./components/NavBar"
 import { useEffect } from "react"
 import { userVar } from "./state/userState"
-import { useReactiveVar } from "@apollo/client"
-import { LoginView } from "./views/Login"
 
 function App() {
-  const user = useReactiveVar(userVar)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const storedUserData = localStorage.getItem("userData")
     if (storedUserData) {
       const userData = JSON.parse(storedUserData)
       userVar(userData)
+
+      if (userData.token) {
+        if (location.pathname === "/login" || location.pathname === "/") {
+          navigate("/")
+        }
+      } else {
+        navigate("/login")
+      }
+    } else {
+      navigate("/login")
     }
-  }, [])
+  }, [location, navigate])
 
   return (
-    <div className='bg-stone-900'>
+    <div className='flex min-h-screen flex-col bg-stone-900'>
       <NavBar />
-      <div className='mx-6 flex max-h-screen flex-grow flex-col gap-3 bg-junkshop'>
-        {user.token ? <RouterProvider router={routes} /> : <LoginView />}
+      <div className='mx-6 flex h-full flex-grow flex-col gap-3 bg-junkshop'>
+        <Outlet />
       </div>
     </div>
   )

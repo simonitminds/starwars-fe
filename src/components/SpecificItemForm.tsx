@@ -6,6 +6,7 @@ import { Input } from "./ui/input"
 import { Item } from "@/gql/graphql"
 import { Textarea } from "./ui/textarea"
 import { Button } from "./ui/button"
+import { useToast } from "@/hooks/use-toast"
 
 const formSchema = z.object({
   name: z.string({ required_error: "ID is required" }),
@@ -33,9 +34,15 @@ export function SpecificItemForm(props: {
       forSale: true,
     },
   })
+  const { toast } = useToast()
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     props.updateFunc(values)
+
+    toast({
+      title: "Item updated",
+      description: `${values.name} has been updated`,
+    })
   }
 
   return (

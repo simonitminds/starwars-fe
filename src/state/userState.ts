@@ -1,3 +1,3 @@
 import { makeVar } from "@apollo/client"
 
-export const userVar = makeVar({ username: "", id: 0, token: "", role: "" })
+export const userVar = makeVar({ username: "", id: 0, token: "", role: "", wallet: 0 })

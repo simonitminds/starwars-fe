@@ -7,7 +7,6 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { useQuery, useReactiveVar } from "@apollo/client"
-import { Label } from "@radix-ui/react-label"
 import { useNavigate } from "react-router-dom"
 import { useEffect } from "react"
 import { userVar } from "@/state/userState"
