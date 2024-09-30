@@ -4,6 +4,7 @@ import { graphql } from "@/gql"
 import { userVar } from "@/state/userState"
 import { useMutation, useQuery, useReactiveVar } from "@apollo/client"
 import { useParams } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 
 const itemQuery = graphql(`
   query item($id: Int!) {
@@ -35,12 +36,14 @@ export const SpecificItemView = () => {
   const { id } = useParams<{ id: string }>()
   const itemId = parseInt(id ?? "0")
   const { data } = useQuery(itemQuery, { variables: { id: itemId } })
+  const navigate = useNavigate()
 
-  const do_the_thing = (vars: FormType) => {
+  const updateFunc = (vars: FormType) => {
     if (!data?.item?.id) return
     update({
       variables: { item: { ...vars, userId: Number(user.id) }, itemId: Number(data.item.id) },
     })
+    navigate("/")
   }
 
   return (
@@ -50,7 +53,7 @@ export const SpecificItemView = () => {
           <CardTitle className='text-center'>Update item details</CardTitle>
         </CardHeader>
         <CardContent className='flex flex-col gap-3'>
-          <SpecificItemForm updateFunc={do_the_thing} item={data?.item}></SpecificItemForm>
+          <SpecificItemForm updateFunc={updateFunc} item={data?.item}></SpecificItemForm>
         </CardContent>
       </Card>
     </div>

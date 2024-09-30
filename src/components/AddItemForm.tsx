@@ -14,6 +14,7 @@ import { z } from "zod"
 import { Button } from "./ui/button"
 import { useNavigate } from "react-router-dom"
 import { Item } from "@/gql/graphql"
+import { useToast } from "@/hooks/use-toast"
 
 const formSchema = z.object({
   name: z.string(),
@@ -37,11 +38,16 @@ export function AddItemForm(props: { item?: Item | null; addFunc: (vars: FormTyp
     },
   })
   const navigate = useNavigate()
+  const { toast } = useToast()
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     props.addFunc(values)
     console.log(values)
-    navigate("/myItems")
+    toast({
+      title: "Item added",
+      description: `Item has been added to your stock`,
+    })
+    navigate("/")
   }
 
   return (

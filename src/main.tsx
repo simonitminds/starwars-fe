@@ -1,8 +1,10 @@
 import React from "react"
 import ReactDOM from "react-dom/client"
-import App from "./app.tsx"
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client"
 import "./index.css"
+import { RouterProvider } from "react-router-dom"
+import { routes } from "./router.tsx"
+import { Toaster } from "./components/ui/toaster.tsx"
 
 const client = new ApolloClient({
   uri: import.meta.env.VITE_API_URL + "/graphql",
@@ -15,7 +17,8 @@ const client = new ApolloClient({
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ApolloProvider client={client}>
-      <App />
+      <RouterProvider router={routes} />
     </ApolloProvider>
+    <Toaster />
   </React.StrictMode>,
 )

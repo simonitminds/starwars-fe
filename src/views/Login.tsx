@@ -5,6 +5,7 @@ import { graphql } from "@/gql"
 import { userVar } from "@/state/userState"
 import { useMutation } from "@apollo/client"
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 const testQuery = graphql(`
   mutation Login($username: String!) {
@@ -13,6 +14,8 @@ const testQuery = graphql(`
       user {
         id
         name
+        role
+        wallet
       }
     }
   }
@@ -20,6 +23,7 @@ const testQuery = graphql(`
 export const LoginView = () => {
   const [username, setUsername] = useState("")
   const [login] = useMutation(testQuery)
+  const navigate = useNavigate()
 
   const submitClick = () => {
     login({ onCompleted: console.log, variables: { username } }).then((x) => {
@@ -28,6 +32,8 @@ export const LoginView = () => {
           id: x.data.login?.user?.id || -1,
           token: x.data.login.token || "",
           username: x.data?.login?.user?.name || "",
+          role: x.data?.login?.user?.role || "",
+          wallet: x.data?.login?.user?.wallet || 0,
         }
         localStorage.setItem("userData", JSON.stringify(userData))
         if (x.data.login?.token) {
@@ -35,11 +41,12 @@ export const LoginView = () => {
         }
         console.log(userData)
         userVar(userData)
+        navigate("/")
       }
     })
   }
   return (
-    <div className='min-w-screen grid min-h-screen place-items-center'>
+    <div className='min-w-screen grid min-h-screen place-items-center bg-junkshop'>
       <Card>
         <CardHeader>
           <CardTitle className='text-center'>Login</CardTitle>

@@ -37,7 +37,7 @@ export type Item = {
   __typename?: 'Item';
   description?: Maybe<Scalars['String']['output']>;
   forSale?: Maybe<Scalars['Boolean']['output']>;
-  id?: Maybe<Scalars['ID']['output']>;
+  id: Scalars['Int']['output'];
   name?: Maybe<Scalars['String']['output']>;
   price?: Maybe<Scalars['Float']['output']>;
   type?: Maybe<Scalars['String']['output']>;
@@ -55,14 +55,27 @@ export type ItemInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addCredits?: Maybe<Scalars['Float']['output']>;
   createItem?: Maybe<Item>;
+  createPurchase?: Maybe<Purchase>;
   login?: Maybe<AuthObject>;
   updateItem?: Maybe<Item>;
 };
 
 
+export type MutationAddCreditsArgs = {
+  creditChange: Scalars['Float']['input'];
+};
+
+
 export type MutationCreateItemArgs = {
   item: ItemInput;
+};
+
+
+export type MutationCreatePurchaseArgs = {
+  purchase: PurchaseInput;
+  transactions: Array<TransactionInput>;
 };
 
 
@@ -76,11 +89,27 @@ export type MutationUpdateItemArgs = {
   itemId: Scalars['Int']['input'];
 };
 
+/** A record of a purchase */
+export type Purchase = {
+  __typename?: 'Purchase';
+  buyerId?: Maybe<Scalars['Int']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  time?: Maybe<Scalars['String']['output']>;
+  transactions?: Maybe<Array<Transaction>>;
+};
+
+export type PurchaseInput = {
+  buyerId: Scalars['Int']['input'];
+};
+
 export type Query = {
   __typename?: 'Query';
   item?: Maybe<Item>;
   items?: Maybe<Array<Item>>;
   itemsByUser?: Maybe<Array<Item>>;
+  itemsForSale?: Maybe<Array<Item>>;
+  userLoggedIn?: Maybe<AuthInputObject>;
+  userWallet?: Maybe<Scalars['Float']['output']>;
   users?: Maybe<Array<AuthInputObject>>;
 };
 
@@ -94,33 +123,69 @@ export type QueryItemsByUserArgs = {
   userId: Scalars['Int']['input'];
 };
 
+/** A transaction associated with a purchase */
+export type Transaction = {
+  __typename?: 'Transaction';
+  id?: Maybe<Scalars['ID']['output']>;
+  item?: Maybe<Item>;
+  purchase?: Maybe<Purchase>;
+  time?: Maybe<Scalars['String']['output']>;
+};
+
+export type TransactionInput = {
+  itemId: Scalars['Int']['input'];
+};
+
+export type UserWalletQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type UserWalletQuery = { __typename?: 'Query', userWallet?: number | null };
+
+export type GetUserQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetUserQuery = { __typename?: 'Query', userLoggedIn?: { __typename?: 'AuthInputObject', id?: number | null, name?: string | null, role?: string | null, wallet?: number | null } | null };
+
 export type CreateItemMutationVariables = Exact<{
   item: ItemInput;
 }>;
 
 
-export type CreateItemMutation = { __typename?: 'Mutation', createItem?: { __typename?: 'Item', id?: string | null, name?: string | null, type?: string | null, price?: number | null, description?: string | null, forSale?: boolean | null } | null };
+export type CreateItemMutation = { __typename?: 'Mutation', createItem?: { __typename?: 'Item', id: number, name?: string | null, type?: string | null, price?: number | null, description?: string | null, forSale?: boolean | null } | null };
+
+export type CreatePurchaseMutationVariables = Exact<{
+  buyerId: Scalars['Int']['input'];
+  transactions: Array<TransactionInput> | TransactionInput;
+}>;
+
+
+export type CreatePurchaseMutation = { __typename?: 'Mutation', createPurchase?: { __typename?: 'Purchase', id?: string | null, time?: string | null, buyerId?: number | null, transactions?: Array<{ __typename?: 'Transaction', id?: string | null, time?: string | null, item?: { __typename?: 'Item', id: number, name?: string | null, price?: number | null } | null }> | null } | null };
+
+export type ItemsForSaleQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ItemsForSaleQuery = { __typename?: 'Query', itemsForSale?: Array<{ __typename?: 'Item', id: number, name?: string | null, type?: string | null, price?: number | null, description?: string | null }> | null };
 
 export type LoginMutationVariables = Exact<{
   username: Scalars['String']['input'];
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login?: { __typename?: 'AuthObject', token?: string | null, user?: { __typename?: 'AuthInputObject', id?: number | null, name?: string | null } | null } | null };
+export type LoginMutation = { __typename?: 'Mutation', login?: { __typename?: 'AuthObject', token?: string | null, user?: { __typename?: 'AuthInputObject', id?: number | null, name?: string | null, role?: string | null, wallet?: number | null } | null } | null };
 
 export type ItemsByUserQueryVariables = Exact<{
   userId: Scalars['Int']['input'];
 }>;
 
 
-export type ItemsByUserQuery = { __typename?: 'Query', itemsByUser?: Array<{ __typename?: 'Item', id?: string | null, name?: string | null, type?: string | null, price?: number | null, description?: string | null, forSale?: boolean | null }> | null };
+export type ItemsByUserQuery = { __typename?: 'Query', itemsByUser?: Array<{ __typename?: 'Item', id: number, name?: string | null, type?: string | null, price?: number | null, description?: string | null, forSale?: boolean | null }> | null };
 
 export type ItemQueryVariables = Exact<{
   id: Scalars['Int']['input'];
 }>;
 
 
-export type ItemQuery = { __typename?: 'Query', item?: { __typename?: 'Item', id?: string | null, name?: string | null, type?: string | null, price?: number | null, description?: string | null } | null };
+export type ItemQuery = { __typename?: 'Query', item?: { __typename?: 'Item', id: number, name?: string | null, type?: string | null, price?: number | null, description?: string | null } | null };
 
 export type UpdateItemMutationVariables = Exact<{
   item: ItemInput;
@@ -128,11 +193,15 @@ export type UpdateItemMutationVariables = Exact<{
 }>;
 
 
-export type UpdateItemMutation = { __typename?: 'Mutation', updateItem?: { __typename?: 'Item', id?: string | null, name?: string | null, type?: string | null, price?: number | null, description?: string | null } | null };
+export type UpdateItemMutation = { __typename?: 'Mutation', updateItem?: { __typename?: 'Item', id: number, name?: string | null, type?: string | null, price?: number | null, description?: string | null } | null };
 
 
+export const UserWalletDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"userWallet"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userWallet"}}]}}]} as unknown as DocumentNode<UserWalletQuery, UserWalletQueryVariables>;
+export const GetUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userLoggedIn"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"wallet"}}]}}]}}]} as unknown as DocumentNode<GetUserQuery, GetUserQueryVariables>;
 export const CreateItemDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createItem"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"item"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ItemInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createItem"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"item"},"value":{"kind":"Variable","name":{"kind":"Name","value":"item"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"price"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"forSale"}}]}}]}}]} as unknown as DocumentNode<CreateItemMutation, CreateItemMutationVariables>;
-export const LoginDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Login"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"username"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"login"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"username"},"value":{"kind":"Variable","name":{"kind":"Name","value":"username"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<LoginMutation, LoginMutationVariables>;
+export const CreatePurchaseDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createPurchase"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"buyerId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"transactions"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"TransactionInput"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createPurchase"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"purchase"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"buyerId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"buyerId"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"transactions"},"value":{"kind":"Variable","name":{"kind":"Name","value":"transactions"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"time"}},{"kind":"Field","name":{"kind":"Name","value":"buyerId"}},{"kind":"Field","name":{"kind":"Name","value":"transactions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"time"}},{"kind":"Field","name":{"kind":"Name","value":"item"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"price"}}]}}]}}]}}]}}]} as unknown as DocumentNode<CreatePurchaseMutation, CreatePurchaseMutationVariables>;
+export const ItemsForSaleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"itemsForSale"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"itemsForSale"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"price"}},{"kind":"Field","name":{"kind":"Name","value":"description"}}]}}]}}]} as unknown as DocumentNode<ItemsForSaleQuery, ItemsForSaleQueryVariables>;
+export const LoginDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Login"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"username"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"login"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"username"},"value":{"kind":"Variable","name":{"kind":"Name","value":"username"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"wallet"}}]}}]}}]}}]} as unknown as DocumentNode<LoginMutation, LoginMutationVariables>;
 export const ItemsByUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"itemsByUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"itemsByUser"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"userId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"price"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"forSale"}}]}}]}}]} as unknown as DocumentNode<ItemsByUserQuery, ItemsByUserQueryVariables>;
 export const ItemDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"item"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"item"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"price"}},{"kind":"Field","name":{"kind":"Name","value":"description"}}]}}]}}]} as unknown as DocumentNode<ItemQuery, ItemQueryVariables>;
 export const UpdateItemDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateItem"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"item"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ItemInput"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"itemId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateItem"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"item"},"value":{"kind":"Variable","name":{"kind":"Name","value":"item"}}},{"kind":"Argument","name":{"kind":"Name","value":"itemId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"itemId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"price"}},{"kind":"Field","name":{"kind":"Name","value":"description"}}]}}]}}]} as unknown as DocumentNode<UpdateItemMutation, UpdateItemMutationVariables>;
