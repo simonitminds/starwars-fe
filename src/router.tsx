@@ -10,6 +10,8 @@ import App from "./app"
 import { WalletView } from "./views/Wallet"
 import { MyProfileView } from "./views/MyProfile"
 import { ChooseAvatarView } from "./views/ChooseAvatar"
+import { MyPurchasesView } from "./views/MyPurchases"
+
 
 export const routes = createBrowserRouter([
   {
@@ -47,6 +49,10 @@ export const routes = createBrowserRouter([
       {
         path: "/myPage/avatars",
         element: <ChooseAvatarView />,
+      },
+      {
+        path: "/purchases",
+        element: <MyPurchasesView />,
       },
     ],
   },
