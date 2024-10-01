@@ -8,6 +8,7 @@ import { ItemsForSaleView } from "./views/ItemsForSale"
 import { CartView } from "./views/Cart"
 import App from "./app"
 import { WalletView } from "./views/Wallet"
+import { MyPurchasesView } from "./views/MyPurchases"
 
 export const routes = createBrowserRouter([
   {
@@ -37,6 +38,10 @@ export const routes = createBrowserRouter([
       {
         path: "/wallet",
         element: <WalletView />,
+      },
+      {
+        path: "/purchases",
+        element: <MyPurchasesView />,
       },
     ],
   },
