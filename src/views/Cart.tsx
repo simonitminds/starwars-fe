@@ -17,19 +17,15 @@ import { useMutation } from "@apollo/client"
 import { useNavigate } from "react-router-dom"
 
 const createPurchaseQuery = graphql(`
-  mutation createPurchase($buyerId: Int!, $transactions: [TransactionInput!]!) {
-    createPurchase(purchase: { buyerId: $buyerId }, transactions: $transactions) {
+  mutation createPurchase($buyerId: Int!, $itemInputs: [Int!]!) {
+    createPurchase(buyerId: $buyerId, itemInputs: $itemInputs) {
       id
       time
       buyerId
       transactions {
         id
         time
-        item {
-          id
-          name
-          price
-        }
+        historicItem
       }
     }
   }
@@ -84,22 +80,29 @@ export const CartView = () => {
   }
 
   const handlePurchase = () => {
-    const transactions = cart.map((item: Item) => ({ itemId: item.id }))
+    const transactionIds = cart.map((item: Item) => item.id)
 
     createPurchase({
       variables: {
         buyerId: user.id,
-        transactions,
+        itemInputs: transactionIds,
       },
     })
-    console.log("transaction:", transactions)
+    console.log("transaction:", transactionIds)
     console.log("User id:", user.id)
     setCart([])
     localStorage.setItem("cart", JSON.stringify([]))
-    toast({
-      title: "Purchase Successful",
-      description: "Your items in cart has been purchased.",
-    })
+    if (cart.length === 0) {
+      toast({
+        title: "Cart is empty",
+        description: "Please add items to cart before purchasing",
+      })
+    } else {
+      toast({
+        title: "Purchase Successful",
+        description: "Your items in cart has been purchased.",
+      })
+    }
   }
 
   return (

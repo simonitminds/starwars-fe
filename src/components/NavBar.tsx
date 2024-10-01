@@ -21,12 +21,13 @@ const walletQuery = gql(`
 `)
 
 const userQuery = graphql(`
-  query getUser {
+  query getUserInfo {
     userLoggedIn {
       id
       name
       role
       wallet
+      picture
     }
   }
 `)
@@ -42,29 +43,37 @@ function NavBar() {
     navigate("/login")
   }
   return (
-    <Navbar expand='lg' className='bg-body-tertiary text-lg text-white'>
+    <Navbar expand='lg' className='bg-body-tertiary mx-6 text-lg text-white'>
       <Container>
-        <Navbar.Collapse id='basic-navbar-nav'>
+        <Navbar.Collapse id='basic-navbar-nav' className='flex flex-row items-center py-2'>
+          <Nav.Link className='cursor-pointer' href='/myPage'>
+            <Avatar>
+              <AvatarImage src={data?.userLoggedIn?.picture || "/src/assets/darthVader.png"} />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+          </Nav.Link>
           <DropdownMenu>
-            <DropdownMenuTrigger className='flex flex-row'>
-              <Avatar>
-                <AvatarImage src='src/assets/darthVader.png' />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-              <Nav.Link className='px-2 hover:text-stone-400'>
+            <DropdownMenuTrigger>
+              <Nav.Link className='flex flex-row px-2 font-bold hover:text-stone-400'>
                 {userData?.userLoggedIn?.name}
               </Nav.Link>
             </DropdownMenuTrigger>
             <DropdownMenuContent className='bg-stone-900 text-white'>
               <DropdownMenuLabel>Current balance: ᖬ{data?.userWallet}</DropdownMenuLabel>
               <DropdownMenuSeparator />
-
+              <DropdownMenuItem>
+                {" "}
+                <Nav.Link className='hover:text-stone-400' href='/myPage'>
+                  My profile
+                </Nav.Link>
+              </DropdownMenuItem>
               <DropdownMenuItem>
                 {" "}
                 <Nav.Link className='hover:text-stone-400' href='/wallet'>
                   Add balance
                 </Nav.Link>
               </DropdownMenuItem>
+
               <DropdownMenuItem>
                 {" "}
                 <Nav.Link
@@ -80,9 +89,11 @@ function NavBar() {
           <Nav.Link className='px-4 hover:text-stone-400' href='/'>
             My items
           </Nav.Link>
-          <Nav.Link className='px-4 hover:text-stone-400' href='/addItem'>
-            Add new item
-          </Nav.Link>
+          {userData?.userLoggedIn?.role === "ADMIN" && (
+            <Nav.Link className='px-4 hover:text-stone-400' href='/addItem'>
+              Add new item
+            </Nav.Link>
+          )}
           <Nav.Link className='px-4 hover:text-stone-400' href='/saleItems'>
             Items for sale
           </Nav.Link>
