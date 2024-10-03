@@ -1,20 +1,50 @@
+const { fontFamily } = require("tailwindcss/defaultTheme")
+
 /** @type {import('tailwindcss').Config} */
-
-import defaultTheme from 'tailwindcss/defaultTheme'
-
-export default {
-  content: ['./src/**/*.tsx'],
+module.exports = {
+  darkMode: ["class"],
+  content: ["src/**/*.{ts,tsx}"],
   theme: {
+    container: {
+      center: "true",
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
+      },
+    },
     extend: {
-      fontFamily: {
-        sans: ['itc_avant_garde_gothic', ...defaultTheme.fontFamily.sans],
-        almost_there_numeric: ['almost_there_numeric', 'sans-serif'],
-        aurek_besh: ['aurek_besh', 'sans-serif'],
-        aurek_besh_narrow: ['aurek_besh_narrow', 'sans-serif'],
-        clynese_hand: ['clynese_hand', 'sans-serif'],
-        orbitron: ['orbitron', 'sans-serif'],
+      backgroundImage: {
+        junkshop: "url('/src/assets/Watto_Shop.png')",
+      },
+      colors: {
+        primary: {
+          DEFAULT: "#dabd98",
+          foreground: "#022c22",
+        },
+      },
+      keyframes: {
+        "accordion-down": {
+          from: {
+            height: "0",
+          },
+          to: {
+            height: "var(--radix-accordion-content-height)",
+          },
+        },
+        "accordion-up": {
+          from: {
+            height: "var(--radix-accordion-content-height)",
+          },
+          to: {
+            height: "0",
+          },
+        },
+      },
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
       },
     },
   },
-  plugins: [],
+  plugins: [require("tailwindcss-animate")],
 }

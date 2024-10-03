@@ -5,14 +5,14 @@ loadEnv()
 
 const url = `${process.env.VITE_API_URL}/graphql`
 
-
 const config: CodegenConfig = {
   schema: url,
-  documents: ['src/**/*.tsx'],
+  watch: true,
+  documents: ["src/**/*.tsx"],
   generates: {
-    './src/gql/': {
-      preset: 'client',
-    }
-  }
+    "./src/gql/": {
+      preset: "client",
+    },
+  },
 }
 export default config

@@ -8,7 +8,7 @@ const schema = `${process.env.VITE_API_URL}/graphql`
 
 const config: IGraphQLConfig = {
   schema,
-  documents: ["./src/**/*.queries.ts"],
+  documents: ["src/**/*.tsx"],
 }
 
 export default config
